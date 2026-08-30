@@ -1,0 +1,5 @@
+/chroma_local/
+/chroma_db/
+/.env
+/milvus.db/
+/milvus_local.db/

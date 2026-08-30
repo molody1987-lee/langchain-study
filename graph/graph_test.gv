@@ -1,0 +1,16 @@
+// LangGraph Flow
+digraph {
+	rankdir=LR
+	__start__ [label=START shape=circle]
+	generate [label=generate shape=box]
+	classify [label=classify shape=box]
+	handle_positive [label=handle_positive shape=box]
+	handle_negative [label=handle_negative shape=box]
+	__end__ [label=END shape=doublecircle]
+	__start__ -> generate [label=""]
+	classify -> handle_negative [label="" style=dashed]
+	classify -> handle_positive [label="" style=dashed]
+	generate -> classify [label=""]
+	handle_negative -> __end__ [label=""]
+	handle_positive -> __end__ [label=""]
+}
