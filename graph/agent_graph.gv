@@ -1,0 +1,10 @@
+// LangGraph Agent Flow
+digraph {
+	rankdir=LR
+	__start__ [label=__start__ shape=circle]
+	agent [label=agent shape=box]
+	__end__ [label=__end__ shape=doublecircle]
+	__start__ -> agent [label=""]
+	agent -> __end__ [label=end style=dashed]
+	agent -> agent [label="" style=dashed]
+}
