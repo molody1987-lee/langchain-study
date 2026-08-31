@@ -10,7 +10,7 @@
                 └─ 条件边: low  → llm_review（LLM 判定）   → END
 """
 
-from typing import Annotated, Literal
+from typing import Literal
 
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field

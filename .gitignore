@@ -3,3 +3,6 @@
 /.env
 /milvus.db/
 /milvus_local.db/
+/graph/graph_wf_test.sqlite
+/graph_wf_test.sqlite
+/graph/moderation_hitl.sqlite

@@ -16,7 +16,7 @@
 """
 
 import sqlite3
-from typing import Annotated, Literal
+from typing import Literal
 
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
