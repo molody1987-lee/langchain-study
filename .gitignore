@@ -6,3 +6,15 @@
 /graph/graph_wf_test.sqlite
 /graph_wf_test.sqlite
 /graph/moderation_hitl.sqlite
+/graph/graph_moderation_test.gv
+/graph/graph_moderation_test.png
+/graph/graph_stream_messages_test.gv
+/graph/graph_stream_messages_test.png
+/graph/graph_stream_mix_test.gv
+/graph/graph_stream_mix_test.png
+/graph/graph_stream_updates_test.gv
+/graph/graph_stream_updates_test.png
+/graph/graph_stream_values_test.gv
+/graph/graph_stream_values_test.png
+/graph/graph_time_travel_test.gv
+/graph/graph_time_travel_test.png
