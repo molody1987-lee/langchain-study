@@ -1,0 +1,13 @@
+// LangGraph Send Fanout
+digraph {
+	rankdir=LR
+	__start__ [label=__start__ shape=circle]
+	dispatch [label="动态派发\n返回 list[Send]" shape=box]
+	worker [label="worker ×N\n(并行)" shape=box]
+	join [label="join\n(等所有 worker 完成)" shape=box]
+	__end__ [label=__end__ shape=doublecircle]
+	__start__ -> dispatch
+	dispatch -> worker [label=Send style=dashed]
+	worker -> join
+	join -> __end__
+}

@@ -1,0 +1,22 @@
+// LangGraph Flow
+digraph {
+	rankdir=LR
+	__start__ [label=__start__ shape=circle]
+	classify [label=classify shape=box]
+	handle_weather [label=handle_weather shape=box]
+	handle_time [label=handle_time shape=box]
+	handle_translate [label=handle_translate shape=box]
+	handle_fallback [label=handle_fallback shape=box]
+	finalize [label=finalize shape=box]
+	__end__ [label=__end__ shape=doublecircle]
+	__start__ -> classify [label=""]
+	classify -> handle_fallback [label="" style=dashed]
+	classify -> handle_time [label="" style=dashed]
+	classify -> handle_translate [label="" style=dashed]
+	classify -> handle_weather [label="" style=dashed]
+	handle_fallback -> finalize [label=""]
+	handle_time -> finalize [label=""]
+	handle_translate -> finalize [label=""]
+	handle_weather -> finalize [label=""]
+	finalize -> __end__ [label=""]
+}
