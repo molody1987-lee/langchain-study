@@ -20,6 +20,8 @@ from pydantic import BaseModel
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 
+from graph.graph_utils import render_graphviz
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -180,58 +182,6 @@ def demo_send_fanout():
 
     # 渲染流程图（Send 动态扇出图需手动绘制，见 render_fanout_manual）
     render_fanout_manual(output_name="graph_switch_fanout")
-
-
-def render_graphviz(graph, output_name: str, output_format: str = "png"):
-    """把编译图转换成 graphviz 流程图并打印/渲染。
-
-    - 始终打印 DOT 源码（不依赖系统 dot 命令）
-    - 尝试渲染成图片文件（需要系统安装 Graphviz 提供 dot 命令）
-    - 未安装 graphviz 包时，回退为 LangGraph 内置 mermaid 源码
-    """
-    drawable = graph.get_graph()
-
-    try:
-        from graphviz import Digraph
-    except ImportError:
-        print("[WARN] 未安装 graphviz 包，回退为 LangGraph 内置 mermaid 源码：")
-        print(drawable.draw_mermaid())
-        return None
-
-    dot = Digraph(comment="LangGraph Flow", format=output_format)
-    dot.attr(rankdir="LR")  # 从左到右布局
-
-    shape_map = {START: "circle", END: "doublecircle"}
-    for node_id in drawable.nodes:
-        dot.node(node_id, label=node_id, shape=shape_map.get(node_id, "box"))
-
-    for edge in drawable.edges:
-        label = edge.data if edge.data else ""
-        if edge.conditional:  # 条件边用虚线表示
-            dot.edge(edge.source, edge.target, label=label, style="dashed")
-        else:
-            dot.edge(edge.source, edge.target, label=label)
-
-    print("=" * 60)
-    print(f"DOT 源码（graphviz）: {output_name}")
-    print("=" * 60)
-    print(dot.source)
-
-    # 保存 .gv 文件（不依赖系统 Graphviz）
-    output_dir = os.environ.get("GRAPH_OUTPUT_DIR") or SCRIPT_DIR
-    os.makedirs(output_dir, exist_ok=True)
-    output_file = os.path.join(output_dir, output_name)
-    dot.save(output_file + ".gv")
-    print(f"DOT 文件已保存: {output_file}.gv")
-
-    # 渲染成图片（需要系统安装 Graphviz / dot）
-    try:
-        rendered_path = dot.render(output_file, cleanup=True, view=False)
-        print(f"流程图已保存: {rendered_path}")
-    except Exception as exc:  # noqa: BLE001
-        print(f"[WARN] 渲染图片失败（可能未安装系统 Graphviz/dot）: {exc}")
-
-    return dot
 
 
 def render_fanout_manual(output_name: str, output_format: str = "png"):

@@ -1,0 +1,20 @@
+// LangGraph LLM Router Flow
+digraph {
+	rankdir=LR
+	__start__ [label=__start__ shape=circle]
+	route [label=route shape=box]
+	tech [label=tech shape=box]
+	billing [label=billing shape=box]
+	aftersales [label=aftersales shape=box]
+	general [label=general shape=box]
+	__end__ [label=__end__ shape=doublecircle]
+	__start__ -> route [label=""]
+	route -> aftersales [label="" style=dashed]
+	route -> billing [label="" style=dashed]
+	route -> general [label="" style=dashed]
+	route -> tech [label="" style=dashed]
+	aftersales -> __end__ [label=""]
+	billing -> __end__ [label=""]
+	general -> __end__ [label=""]
+	tech -> __end__ [label=""]
+}

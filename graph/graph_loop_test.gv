@@ -1,0 +1,10 @@
+// LangGraph Loop Flow
+digraph {
+	rankdir=LR
+	__start__ [label=__start__ shape=circle]
+	step [label=step shape=box]
+	__end__ [label=__end__ shape=doublecircle]
+	__start__ -> step [label=""]
+	step -> __end__ [label=stop style=dashed]
+	step -> step [label=continue style=dashed]
+}

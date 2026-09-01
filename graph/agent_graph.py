@@ -8,7 +8,6 @@ LLM 决定是否调用工具；若有工具调用则执行后回到 agent 继续
 """
 
 import json
-import os
 import urllib.parse
 import urllib.request
 from datetime import datetime
@@ -19,6 +18,7 @@ from langchain_core.tools import tool
 from langgraph.graph import END, START, StateGraph, add_messages
 from pydantic import BaseModel
 
+from graph.graph_utils import render_graphviz
 from llm.deepseek.global_setting import make_llm
 
 _WEATHER_URL = "https://wttr.in/{city}?format=j1"
@@ -97,64 +97,6 @@ def build_graph():
     builder.add_conditional_edges("agent", should_continue, {"agent": "agent", "end": END})
 
     return builder.compile()
-
-
-# ---------------------------------------------------------------------------
-# 使用 graphviz 把编译后的图渲染成流程图
-# ---------------------------------------------------------------------------
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def render_graphviz(graph, output_name: str = "agent_graph", output_format: str = "png"):
-    """把 LangGraph 编译图转换成 graphviz 流程图并渲染。
-
-    - 始终输出 DOT 源码（不依赖系统 dot 命令）
-    - 尝试渲染成图片文件（需要系统安装 Graphviz 提供 dot 命令）
-    """
-    drawable = graph.get_graph()
-
-    try:
-        from graphviz import Digraph
-    except ImportError:
-        print("[WARN] 未安装 graphviz 包，回退为 LangGraph 内置 mermaid 源码：")
-        print(drawable.draw_mermaid())
-        return None
-
-    dot = Digraph(comment="LangGraph Agent Flow", format=output_format)
-    dot.attr(rankdir="LR")  # 从左到右布局
-
-    shape_map = {START: "circle", END: "doublecircle"}
-    for node_id in drawable.nodes:
-        dot.node(node_id, label=node_id, shape=shape_map.get(node_id, "box"))
-
-    for edge in drawable.edges:
-        label = edge.data if edge.data else ""
-        if edge.conditional:
-            dot.edge(edge.source, edge.target, label=label, style="dashed")
-        else:
-            dot.edge(edge.source, edge.target, label=label)
-
-    # 输出 DOT 源码
-    print("=" * 60)
-    print("DOT 源码（graphviz）:")
-    print("=" * 60)
-    print(dot.source)
-
-    # 保存 .gv 文件（不依赖系统 Graphviz）
-    output_dir = os.environ.get("GRAPH_OUTPUT_DIR") or SCRIPT_DIR
-    os.makedirs(output_dir, exist_ok=True)
-    output_file = os.path.join(output_dir, output_name)
-    dot.save(output_file + ".gv")
-    print(f"DOT 文件已保存: {output_file}.gv")
-
-    # 渲染成图片（需要系统安装 Graphviz / dot）
-    try:
-        rendered_path = dot.render(output_file, cleanup=True, view=False)
-        print(f"流程图已保存: {rendered_path}")
-    except Exception as exc:  # noqa: BLE001
-        print(f"[WARN] 渲染图片失败（可能未安装系统 Graphviz/dot）: {exc}")
-
-    return dot
 
 
 def main():
